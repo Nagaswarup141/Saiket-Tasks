@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Blog App</title>
+</head>
+<body>
+
+<h2>Simple Blog</h2>
+
+<input type="text" id="title" placeholder="Enter Title"><br><br>
+<textarea id="content" placeholder="Write something..."></textarea><br><br>
+
+<button onclick="addPost()">Add Post</button>
+
+<h3>Posts</h3>
+<ul id="posts"></ul>
+
+<script>
+
+// Page load ayyaka posts load avvali
+window.onload = function() {
+    loadPosts();
+};
+
+function loadPosts() {
+    let posts = JSON.parse(localStorage.getItem("posts")) || [];
+    let list = document.getElementById("posts");
+    list.innerHTML = "";
+
+    posts.forEach((post, index) => {
+        let li = document.createElement("li");
+        li.innerHTML = `<b>${post.title}</b>: ${post.content} 
+        <button onclick="deletePost(${index})">Delete</button>`;
+        list.appendChild(li);
+    });
+}
+
+function addPost() {
+    let title = document.getElementById("title").value.trim();
+    let content = document.getElementById("content").value.trim();
+
+    // Validation
+    if (title === "" || content === "") {
+        alert("Please enter both title and content");
+        return;
+    }
+
+    let posts = JSON.parse(localStorage.getItem("posts")) || [];
+    posts.push({ title, content });
+
+    localStorage.setItem("posts", JSON.stringify(posts));
+
+    // Clear input fields
+    document.getElementById("title").value = "";
+    document.getElementById("content").value = "";
+
+    loadPosts();
+}
+
+function deletePost(index) {
+    let posts = JSON.parse(localStorage.getItem("posts")) || [];
+    posts.splice(index, 1);
+
+    localStorage.setItem("posts", JSON.stringify(posts));
+    loadPosts();
+}
+
+</script>
+
+</body>
+</html>
